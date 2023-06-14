@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    depends_on:
+      - db
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    env_file:
+      - .env
+    networks:
+      - shared-network
+  db:
+    image: postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    env_file:
+      - .env
+    networks:
+      - shared-network
+
+volumes:
+  postgres-data:
+    driver: local
+
+networks:
+  shared-network:
+    driver: 'bridge'
